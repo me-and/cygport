@@ -584,6 +584,22 @@ __probe_case_sensitivity() {
 }
 
 __enable_case_sensitivity() {
+	inform "_ENABLE_CASE_SENSITIVITY: ${_ENABLE_CASE_SENSITIVITY@Q}"
+	if defined _ENABLE_CASE_SENSITIVITY; then
+		inform '_ENABLE_CASE_SENSITIVITY defined'
+	fi
+	if [[ "$_ENABLE_CASE_SENSITIVITY" ]]; then
+		inform '[[ "$_ENABLE_CASE_SENSITIVITY" ]] evaluates true'
+	fi
+	if [[ -v _ENABLE_CASE_SENSITIVITY ]]; then
+		inform '[[ -v _ENABLE_CASE_SENSITIVITY ]] evaluates true'
+	fi
+	if [ "$_ENABLE_CASE_SENSITIVITY" ]; then
+		inform '[ "$_ENABLE_CASE_SENSITIVITY ] evaluates true'
+	fi
+	if [ -v _ENABLE_CASE_SENSITIVITY ]; then
+		inform '[ -v _ENABLE_CASE_SENSITIVITY ] evaluates true'
+	fi
 	if defined _ENABLE_CASE_SENSITIVITY && [ $OSTYPE = "cygwin" ]
 	then
 		inform "Trying to enable case sensitivity on ${workdir}"
