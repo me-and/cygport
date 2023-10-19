@@ -584,7 +584,7 @@ __probe_case_sensitivity() {
 }
 
 __enable_case_sensitivity() {
-	if [ $OSTYPE = "cygwin" ]
+	if defined _ENABLE_CASE_SENSITIVITY && [ $OSTYPE = "cygwin" ]
 	then
 		inform "Trying to enable case sensitivity on ${workdir}"
 		chattr -fR +C ${workdir} >/dev/null 2>&1 || true
