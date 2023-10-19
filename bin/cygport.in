@@ -591,6 +591,13 @@ __enable_case_sensitivity() {
 	fi
 }
 
+if [[ "$-" = *x* ]]; then
+	disable_trace=
+else
+	disable_trace=YesPlease
+	set -x
+fi
+
 # create workdir if it doesn't already exist, and try to enable case-sensitivity
 # if it appears to be absent
 if [ ! -d ${workdir} ]
@@ -608,6 +615,10 @@ then
 	else
 		warning "Building on a case-insensitive filesystem";
 	fi
+fi
+
+if [[ "$disable_trace" ]]; then
+	set +x
 fi
 
 # this requires S and B to be already defined
