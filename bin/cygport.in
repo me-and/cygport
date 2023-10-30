@@ -679,7 +679,11 @@ do
 		inst*)
 			__stage Installing;
 			__log_init ${installlog};
-			(__prepinstalldirs && src_install && __src_postinst) 2>&1 | tee -a ${installlog};
+			{
+				__prepinstalldirs
+				src_install
+				__src_postinst
+			} 2>&1 | tee -a ${installog};
 			_status=${PIPESTATUS[0]};
 			;;
 		postinst*)
@@ -764,12 +768,20 @@ do
 			__stage Compiling && src_compile 2>&1 | tee -a ${compilelog} && \
 			test ${PIPESTATUS[0]} -eq 0 && \
 			__log_init ${installlog} && \
-			__stage Installing && (__prepinstalldirs && src_install && __src_postinst) 2>&1 | tee -a ${installlog} && \
-			test ${PIPESTATUS[0]} -eq 0 && \
-			__log_init ${pkglog} && \
-			__stage Packaging && (__pkg_binpkg && __pkg_pkgcheck && __pkg_srcpkg ${_pkg_tag} && __pkg_dist ${_pkg_tag}) 2>&1 | tee -a ${pkglog} && \
-			test ${PIPESTATUS[0]} -eq 0
-			_status=$?;
+			__stage Installing
+			{
+				__prepinstalldirs
+				src_install
+				__src_postinst
+			} 2>&1 | tee -a ${installlog};
+			if test ${PIPESTATUS[0]} -eq 0; then
+				__log_init ${pkglog} && \
+				__stage Packaging && (__pkg_binpkg && __pkg_pkgcheck && __pkg_srcpkg ${_pkg_tag} && __pkg_dist ${_pkg_tag}) 2>&1 | tee -a ${pkglog} && \
+				test ${PIPESTATUS[0]} -eq 0
+				_status=$?;
+			else
+				_status=1;
+			fi
 			;;
 		help)
 			__show_help;
